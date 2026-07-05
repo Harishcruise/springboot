@@ -28,7 +28,7 @@ public class ProductController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id){
-        return ResponseEntity.ok(productService.findById(id));
+        return productService.findById(id).map(Product-> ResponseEntity.ok(Product)).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody Product product){
@@ -36,9 +36,8 @@ public class ProductController {
         return ResponseEntity.status(201).build();
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Product product){
-        productService.update(id,product);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product){
+       return productService.update(id,product).map(updatedProduct -> ResponseEntity.ok(updatedProduct)).orElseGet(()->ResponseEntity.notFound().build());
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id){

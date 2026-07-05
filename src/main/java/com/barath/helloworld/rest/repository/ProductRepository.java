@@ -1,5 +1,6 @@
 package com.barath.helloworld.rest.repository;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,20 +15,26 @@ public class ProductRepository {
             this.jdbcTemplate = jdbcTemplate;
         }
         public List<Product> findAll(){
-            String sql = "SELECT * FROM products";
+            String sql = "SELECT id, name, price FROM products";
             return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Product.class));
         }
-        public Product findById(Long id){
-            String sql = "SELECT * FROM products WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class),id);
+        public Optional<Product> findById(Long id){
+            String sql = "SELECT id, name, price FROM products WHERE id = ?";
+            List<Product> products = jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Product.class),id);
+            Optional<Product> result = products.stream().findFirst();
+            return result;
         }
         public void save(Product product){
             String sql = "INSERT INTO products (name,price) VALUES (?,?)";
             jdbcTemplate.update(sql,product.getName(),product.getPrice());
         }
-        public void update(Long id, Product product){
+        public Optional<Product> update(Long id, Product product){
             String sql = "UPDATE products SET name = ?, price = ? WHERE id = ?";
-            jdbcTemplate.update(sql,product.getName(),product.getPrice(),id);
+            int rowsAffected = jdbcTemplate.update(sql,product.getName(),product.getPrice(),id);
+            if(rowsAffected ==0){
+                return Optional.empty();
+            }
+            return findById(id);
 
         }
         public void deleteById(Long id){
