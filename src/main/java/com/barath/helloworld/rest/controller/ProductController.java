@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.barath.helloworld.rest.entity.Product;
 import com.barath.helloworld.rest.service.ProductService;
 
+import jakarta.inject.Inject;
+
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+    
     private final ProductService productService;
+    @Inject
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
