@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 
 import com.barath.helloworld.rest.entity.Product;
 import com.barath.helloworld.rest.repository.ProductRepository;
+
+import jakarta.inject.Inject;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    @Inject
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
