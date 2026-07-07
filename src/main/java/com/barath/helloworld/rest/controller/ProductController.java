@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.barath.helloworld.rest.entity.Product;
@@ -27,8 +28,8 @@ public class ProductController {
         this.productService = productService;
     }
     @GetMapping
-    public ResponseEntity<List<Product>> findAll(){
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<List<Product>> findAll(@RequestParam (defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.findAll(page,size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id){

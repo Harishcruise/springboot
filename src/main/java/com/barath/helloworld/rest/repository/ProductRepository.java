@@ -14,9 +14,10 @@ public class ProductRepository {
         public ProductRepository(JdbcTemplate jdbcTemplate) {
             this.jdbcTemplate = jdbcTemplate;
         }
-        public List<Product> findAll(){
-            String sql = "SELECT id, name, price FROM products";
-            return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Product.class));
+        public List<Product> findAll(int page, int size){
+            String sql = "SELECT id, name, price FROM products LIMIT ? OFFSET ?";
+            int offset = page * size;
+            return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Product.class),size,offset);
         }
         public Optional<Product> findById(Long id){
             String sql = "SELECT id, name, price FROM products WHERE id = ?";
